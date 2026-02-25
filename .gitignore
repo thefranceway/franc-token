@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+launch/strategy.py
+launch/sell-strategy.py
+launch/trade.py
+launch/agent-human-manual.md
+mcp-server/
