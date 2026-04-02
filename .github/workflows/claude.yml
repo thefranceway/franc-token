@@ -1,0 +1,36 @@
+name: Claude Code — Issue to PR
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [assigned]
+
+jobs:
+  claude:
+    # Only run when:
+    #   - an issue is assigned to 'claude' or 'thefranceway'
+    #   - OR a comment contains @claude
+    if: |
+      (github.event_name == 'issues' &&
+       (github.event.assignee.login == 'claude' || github.event.assignee.login == 'thefranceway')) ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, '@claude'))
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_args: |
+            {
+              "model": "claude-sonnet-4-6",
+              "max_tokens": 8096
+            }
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
